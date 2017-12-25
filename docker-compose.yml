@@ -66,7 +66,11 @@ services:
 
 volumes:
   nginx_data:
+    external:
+      name: nginx_data
   mongo_data:
+    external:
+      name: mongo_data
 
 networks:
   nginx_proxy:
