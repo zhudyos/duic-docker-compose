@@ -58,7 +58,7 @@ services:
       - LETSENCRYPT_HOST=duic.zhudy.io
       - LETSENCRYPT_EMAIL=kevinz@weghst.com
     volumes:
-      - ./config:/config
+      - ./config:/app/config
     networks:
       - nginx_proxy
       - backend
