@@ -11,8 +11,8 @@ services:
     volumes:
       - nginx_conf:/etc/nginx/conf.d:ro
       - nginx_vhost:/etc/nginx/vhost.d
-      - nginx_html:/usr/share/nginx/html
       - nginx_certs:/etc/nginx/certs:ro
+      - nginx_html:/usr/share/nginx/html
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     networks:
@@ -25,8 +25,9 @@ services:
 #    restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx_conf:/etc/nginx/conf.d:rw
-      - nginx_vhost:/etc/nginx/vhost.d:rw
+      - nginx_conf:/etc/nginx/conf.d
+      - nginx_vhost:/etc/nginx/vhost.d
+      - nginx_certs:/etc/nginx/certs
       - ./templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
@@ -73,20 +74,10 @@ services:
 
 volumes:
   nginx_conf:
-    external:
-      name: nginx_conf
   nginx_vhost:
-    external:
-      name: nginx_vhost
   nginx_html:
-    external:
-      name: nginx_html
   nginx_certs:
-    external:
-      name: nginx_certs
   mongo_data:
-    external:
-      name: mongo_data
 
 networks:
   nginx_proxy:
