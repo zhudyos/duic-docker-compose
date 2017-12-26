@@ -7,9 +7,12 @@ services:
     ports:
       - 80:80
       - 443:443
-    restart: always
+#    restart: always
     volumes:
-      - nginx_data:/etc/nginx:ro
+      - nginx_conf:/etc/nginx/conf.d:ro
+      - nginx_vhost:/etc/nginx/vhost.d
+      - nginx_html:/usr/share/nginx/html
+      - nginx_certs:/etc/nginx/certs:ro
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     networks:
@@ -19,24 +22,28 @@ services:
   nginx_gen:
     image: jwilder/docker-gen
     container_name: jwilder_gen
-    restart: always
+#    restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx_data:/etc/nginx
+      - nginx_conf:/etc/nginx/conf.d:rw
+      - nginx_vhost:/etc/nginx/vhost.d:rw
+      - ./templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+    command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     networks:
       - nginx_proxy
 
   nginx_letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: jrcs_letsencrypt
-    restart: always
+    environment:
+      - NGINX_DOCKER_GEN_CONTAINER=nginx-gen
+      - NGINX_PROXY_CONTAINER=nginx
+#    restart: always
     volumes:
-      - nginx_data:/etc/nginx:rw
-      - ./templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+      - nginx_certs:/etc/nginx/certs:rw
     networks:
       - nginx_proxy
 
@@ -65,9 +72,18 @@ services:
       - backend
 
 volumes:
-  nginx_data:
+  nginx_conf:
     external:
-      name: nginx_data
+      name: nginx_conf
+  nginx_vhost:
+    external:
+      name: nginx_vhost
+  nginx_html:
+    external:
+      name: nginx_html
+  nginx_certs:
+    external:
+      name: nginx_certs
   mongo_data:
     external:
       name: mongo_data
