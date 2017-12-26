@@ -61,7 +61,7 @@ services:
       - VIRTUAL_HOST=duic.zhudy.io
       - VIRTUAL_NETWORK=nginx_proxy
       - VIRTUAL_PORT=7777
-      - LETSENCRYPT_HOST=dui.zhudy.io
+      - LETSENCRYPT_HOST=duic.zhudy.io
       - LETSENCRYPT_EMAIL=kevinz@weghst.com
     volumes:
       - ./config:/config
