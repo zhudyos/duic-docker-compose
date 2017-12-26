@@ -11,6 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - nginx_vhost:/etc/nginx/vhost.d
       - nginx_certs:/etc/nginx/certs:rw
+      - nginx_html:/usr/share/nginx/html
     networks:
       - nginx_proxy
     depends_on:
