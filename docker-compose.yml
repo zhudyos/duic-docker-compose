@@ -15,6 +15,7 @@ services:
       - ${NGINX_FILES_PATH}/vhost.d:/etc/nginx/vhost.d
       - ${NGINX_FILES_PATH}/html:/usr/share/nginx/html
       - ${NGINX_FILES_PATH}/certs:/etc/nginx/certs:ro
+      - /var/log:/var/log
     networks:
       - nginx_proxy
 
@@ -72,13 +73,6 @@ services:
       - mongo_data:/data/db
     networks:
       - backend
-
-volumes:
-  nginx_conf:
-  nginx_vhost:
-  nginx_html:
-  nginx_certs:
-  mongo_data:
 
 networks:
   nginx_proxy:
