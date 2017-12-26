@@ -37,11 +37,12 @@ services:
     restart: always
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx_gen
+      - NGINX_PROXY_CONTAINER=nginx
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - nginx_conf:/etc/nginx/conf.d:ro
       - nginx_vhost:/etc/nginx/vhost.d
-      - nginx_certs:/etc/nginx/certs:rw
+      - nginx_certs:/etc/nginx/certs
       - nginx_html:/usr/share/nginx/html
     networks:
       - nginx_proxy
