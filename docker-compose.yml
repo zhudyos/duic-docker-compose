@@ -74,6 +74,9 @@ services:
     networks:
       - backend
 
+volumes:
+  mongo_data:
+
 networks:
   nginx_proxy:
     external:
