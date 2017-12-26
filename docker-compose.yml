@@ -6,7 +6,6 @@ services:
     container_name: jrcs_letsencrypt
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-gen
-      - NGINX_PROXY_CONTAINER=nginx
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -29,8 +28,6 @@ services:
       - nginx_vhost:/etc/nginx/vhost.d
       - nginx_certs:/etc/nginx/certs
       - ./templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
-    labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
     command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     networks:
       - nginx_proxy
@@ -49,11 +46,8 @@ services:
       - nginx_vhost:/etc/nginx/vhost.d
       - nginx_certs:/etc/nginx/certs:ro
       - nginx_html:/usr/share/nginx/html
-    labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     networks:
       - nginx_proxy
-      - frontend
 
   duic:
     image: zhudyos/duic
@@ -66,7 +60,7 @@ services:
     volumes:
       - ./config:/config
     networks:
-      - frontend
+      - nginx_proxy
       - backend
     depends_on:
       - mongo
@@ -88,5 +82,4 @@ volumes:
 
 networks:
   nginx_proxy:
-  frontend:
   backend:
