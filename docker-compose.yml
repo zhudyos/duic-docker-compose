@@ -83,4 +83,6 @@ volumes:
 
 networks:
   nginx_proxy:
+    external:
+      name: nginx_proxy
   backend:
