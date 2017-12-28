@@ -1,0 +1,33 @@
+https://github.com/zhudyos/duic[DuiC] 统一配置管理 docker-compose 配置
+
+在 `docker-compose` 配置中已经集成
+
+. mongodb
+. nginx
+. let's encrypt
+. docker-gen 服务发现
+
+---
+
+=== 示例
+
+. clone 源码
++
+```
+$ git clone https://github.com/zhudyos/duic-docker-compose.git
+```
+. 进入文件夹
++
+```
+$ cd duic-docker-compose
+```
+. 为 `start.sh` 授权
++
+```
+$ chmod +x start.sh
+```
+. 启动
++
+```
+$ ./start.sh
+```
