@@ -3,19 +3,15 @@ version: '3'
 services:
   nginx:
     image: nginx
-    labels:
-        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     container_name: nginx
     restart: always
     ports:
       - 80:80
-      - 443:443
     volumes:
       - ${NGINX_FILES_PATH}/conf.d:/etc/nginx/conf.d
       - ${NGINX_FILES_PATH}/vhost.d:/etc/nginx/vhost.d
       - ${NGINX_FILES_PATH}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH}/certs:/etc/nginx/certs:ro
-      - /var/log:/var/log
+      - /var/log/nginx:/var/log/nginx
     networks:
       - nginx_proxy
 
@@ -28,25 +24,8 @@ services:
       - ${NGINX_FILES_PATH}/conf.d:/etc/nginx/conf.d
       - ${NGINX_FILES_PATH}/vhost.d:/etc/nginx/vhost.d
       - ${NGINX_FILES_PATH}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH}/certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./templates/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
-    networks:
-      - nginx_proxy
-
-  nginx_letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx_letsencrypt
-    restart: always
-    volumes:
-      - ${NGINX_FILES_PATH}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH}/vhost.d:/etc/nginx/vhost.d
-      - ${NGINX_FILES_PATH}/html:/usr/share/nginx/html
-      - ${NGINX_FILES_PATH}/certs:/etc/nginx/certs:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      NGINX_DOCKER_GEN_CONTAINER: nginx_gen
-      NGINX_PROXY_CONTAINER: nginx
     networks:
       - nginx_proxy
 
@@ -56,8 +35,6 @@ services:
       - VIRTUAL_HOST=duic.zhudy.io
       - VIRTUAL_NETWORK=nginx_proxy
       - VIRTUAL_PORT=7777
-      - LETSENCRYPT_HOST=duic.zhudy.io
-      - LETSENCRYPT_EMAIL=kevinz@weghst.com
     volumes:
       - ./config:/app/config
     networks:
